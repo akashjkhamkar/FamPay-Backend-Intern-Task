@@ -1,5 +1,6 @@
 from celery import Celery
 from tasks.utils.youtube_utils import extract_youtube_data
+from tasks.utils.mongo_utils import load_into_db
 
 app = Celery('tasks', broker='redis://redis:6379')
 
@@ -7,11 +8,12 @@ app = Celery('tasks', broker='redis://redis:6379')
 app.conf.beat_schedule = {
     'youtube-task': {
         'task': 'youtube_etl',
-        'schedule': 3
+        'schedule': 10
     }
 }
 
 @app.task(name='youtube_etl')
 def youtube_etl():
+    """Youtube job that runs periodically to fetch youtube video data."""
     videos = extract_youtube_data()
-    print(videos)
+    load_into_db(videos)

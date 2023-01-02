@@ -3,7 +3,7 @@ from tasks.utils.mongo_utils import get_db, get_configs, get_api_keys
 from datetime import datetime, timedelta
 
 YOUTUBE_API_URL = 'https://youtube.googleapis.com/youtube/v3/search'
-SUBJECT = 'lofi'
+SUBJECT = 'john mayer'
 
 def get_the_start_time():
     db = get_db()
@@ -12,7 +12,7 @@ def get_the_start_time():
     current_time = datetime.utcnow()
 
     if start_from_date == '':
-        start_from_date = current_time - timedelta(seconds=1000000)
+        start_from_date = current_time - timedelta(days=2)
     
     config['last_run'] = current_time
     db.configs.update_one({'_id': config['_id']}, {'$set': config}, upsert=False)

@@ -1,6 +1,7 @@
-from pymongo import MongoClient
-
 import os
+import dateutil.parser
+
+from pymongo import MongoClient, errors
 
 mongo_user = os.environ["MONGO_USERNAME"]
 mongo_password = os.environ.get("MONGO_PASSWORD")
@@ -32,3 +33,29 @@ def get_api_keys():
     """Returns the youtube api keys stored."""
     config = get_configs()
     return config['tokens']
+
+def load_into_db(videos):
+    """Store the api response in the db."""
+    if len(videos) == 0:
+        return
+    
+    # Parsing the date into a datetime object
+    for video in videos:
+        published_time = video['snippet']['publishTime']
+        video['publishTime'] = dateutil.parser.isoparse(published_time)
+
+    db = get_db()
+
+    try:
+        db.youtube_videos.insert_many(videos, ordered=False)
+    except errors.BulkWriteError as e:
+        e.details['writeErrors']
+        exceptions = []
+
+        for x in e.details['writeErrors']:
+            # 11000 code is for duplicates, we dont want to raise exception if duplicate is found
+            if x['code'] != 11000:
+                exceptions.append(x)
+
+        if len(exceptions) > 0:
+            print("Something went wrong while inserting in mongodb.", exceptions)
