@@ -1,0 +1,5 @@
+celery==5.1.2
+redis==4.3.5
+requests
+pymongo
+python-dateutil

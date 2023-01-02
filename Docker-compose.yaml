@@ -1,0 +1,25 @@
+services:
+  redis:
+    container_name: redis
+    restart: always
+    image: redis:alpine
+
+  celery-worker:
+    container_name: celery-worker
+    build: ./celery-server
+    command: celery -A tasks worker -l debug
+    volumes:
+      - ./tasks:/tasks/
+    restart: always
+    depends_on:
+      - redis
+
+  celery-beat:
+    container_name: celery-beat
+    build: ./celery-server
+    command: celery -A tasks beat -l debug
+    volumes:
+      - ./tasks/:/tasks/
+    restart: always
+    depends_on:
+      - redis
