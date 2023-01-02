@@ -2,4 +2,9 @@ GET http://localhost:8000/get
 
 ###
 
-POST http://localhost:8000/add_api_key?
+POST http://localhost:8000/add_api_key
+Content-Type: application/json
+
+{
+    "key": "laksdjf;asdfadsfdsfdsafds"
+}

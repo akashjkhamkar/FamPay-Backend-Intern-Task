@@ -38,7 +38,18 @@ def parse_date(date):
 @app.route('/add_api_key', methods=['POST'])
 def add_api_key():
     """Endpoint to add new youtube api keys."""
-    print(request.json())
+    key = request.json.get('key')
+    if key is None:
+        return jsonify({'Error': 'Please put the api key in the payload.'}), 400
+
+    configs = db['configs']
+    config = configs.find_one()
+
+    config['tokens'].append(key)
+
+    configs.update_one({'_id': config['_id']}, {'$set': config}, upsert=False)
+
+    return jsonify({'Message': 'API key added successfully !'})
 
 @app.route('/get', methods=['GET'])
 def get_videos():
