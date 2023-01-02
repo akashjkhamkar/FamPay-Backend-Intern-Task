@@ -14,9 +14,11 @@ CONNECTION_STRING = CONNECTION_STRING_TEMPLATE.format(
 mongo_client = MongoClient(CONNECTION_STRING)
 
 def get_db():
+    """Returns the youtube database"""
     return mongo_client['youtubedb']
 
 def get_configs():
+    """Returns the configs collection."""
     db = get_db()
     configs = db.configs
     config = configs.find_one({}, sort=[( '_id', -1 )])
@@ -27,5 +29,6 @@ def get_configs():
     return config
 
 def get_api_keys():
+    """Returns the youtube api keys stored."""
     config = get_configs()
     return config['tokens']
