@@ -6,5 +6,5 @@ POST http://localhost:8000/add_api_key
 Content-Type: application/json
 
 {
-    "key": "laksdjf;asdfadsfdsfdsafds"
+    "key": "AIzaSyCMCZlRUqoVRzTi4MVnw3VzoY6x_X2TS_I"
 }
