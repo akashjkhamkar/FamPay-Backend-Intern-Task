@@ -1,4 +1,19 @@
 services:
+  flask-server:
+    container_name: flask-server
+    build: ./flask-server
+    command: python3 /app/api.py
+    restart: always
+    volumes:
+      - ./flask-server/:/app/
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: password    
+    depends_on:
+      - mongodb
+
   redis:
     container_name: redis
     restart: always
