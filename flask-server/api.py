@@ -35,6 +35,11 @@ def parse_date(date):
 
     return dateutil.parser.isoparse(date)
 
+@app.route('/add_api_key', methods=['POST'])
+def add_api_key():
+    """Endpoint to add new youtube api keys."""
+    print(request.json())
+
 @app.route('/get', methods=['GET'])
 def get_videos():
     """Endpoint to retrieve all of the youtube data in a paginated form."""
@@ -74,11 +79,18 @@ def get_videos():
         date_filters['$lte'] = published_before
 
     query_set = None
-
+    count = 0
     if date_filters:
         query_set = youtube_videos.find({'publishTime': date_filters})
+        count = youtube_videos.count_documents({'publishTime': date_filters})
     else:
         query_set = youtube_videos.find()
+        count = youtube_videos.count_documents({})
+
+    # Check if the page number is valid or not
+
+    if (count // page_limit) + 1 < page:
+        return jsonify({'error': "Invalid page number."})
 
     # Filter according to the date, descending , and limit to the page size 
     videos = query_set \
@@ -89,6 +101,12 @@ def get_videos():
     res = {
         'results': list(json.loads(json_util.dumps(videos)))
     }
+
+    if page > 1:
+        res['prev_page'] = page - 1
+
+    if len(res['results']) == page_limit:
+        res['next_page'] = page + 1
 
     return jsonify(res)
 
