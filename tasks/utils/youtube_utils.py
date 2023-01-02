@@ -6,6 +6,7 @@ YOUTUBE_API_URL = 'https://youtube.googleapis.com/youtube/v3/search'
 SUBJECT = 'football'
 
 def get_the_start_time():
+    """Return the last job execution date."""
     db = get_db()
     config = get_configs()
     start_from_date = config['last_run']
@@ -21,6 +22,7 @@ def get_the_start_time():
     return start_from_date_str
 
 def fetch_page(published_after, page=''):
+    """Fetch a single page of the youtube data for the given startdate."""
     api_keys = get_api_keys()
 
     if len(api_keys) == 0:
@@ -53,11 +55,13 @@ def fetch_page(published_after, page=''):
     raise Exception('All of the keys have expired their daily quota !.')
 
 def extract_youtube_data():
+    """Fetch youtube data for the given startdate."""
     published_after = get_the_start_time()
 
     page = ''
     total_videos = []
 
+    # Keep on fetching all the pages, until there is no next page left
     while True:
         videos, next_page = fetch_page(published_after, page)
         print("fetched ", len(videos))

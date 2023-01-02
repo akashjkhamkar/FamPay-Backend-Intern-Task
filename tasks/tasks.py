@@ -4,7 +4,7 @@ from tasks.utils.mongo_utils import load_into_db
 
 app = Celery('tasks', broker='redis://redis:6379')
 
-# Testing celery beat scheduler
+# Celery beat configuration for the periodic youtube job
 app.conf.beat_schedule = {
     'youtube-task': {
         'task': 'youtube_etl',
