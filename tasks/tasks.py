@@ -1,4 +1,5 @@
 from celery import Celery
+from tasks.utils.mongo_utils import get_configs
 
 app = Celery('tasks', broker='redis://redis:6379')
 
@@ -12,4 +13,4 @@ app.conf.beat_schedule = {
 
 @app.task(name='hello_world')
 def hello_world():
-    print("Hello world")
+    print(get_configs())

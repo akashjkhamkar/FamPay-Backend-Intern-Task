@@ -11,6 +11,9 @@ services:
     volumes:
       - ./tasks:/tasks/
     restart: always
+    environment:
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: password
     depends_on:
       - redis
 
@@ -21,5 +24,33 @@ services:
     volumes:
       - ./tasks/:/tasks/
     restart: always
+    environment:
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: password
     depends_on:
       - redis
+
+  mongodb:
+    container_name: mongodb
+    build: './mongodb-server'
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: youtubedb
+    ports:
+      - "27017:27017"
+        
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "28081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongo://mongoadmin:mongoadmin@mongodb:27017/ 
+    depends_on:
+      - mongodb
