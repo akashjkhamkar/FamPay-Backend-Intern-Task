@@ -67,6 +67,7 @@ We are also retrieving the whole document all at once, hence non-relational docu
 
 - Mongo express container provides a dashboard to view all the collections.
 - User can sort, query the videos fetched.
+- Visit http://localhost:28081 to view the express dashboard.
 
 ### Instructions
 
