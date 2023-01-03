@@ -55,7 +55,7 @@ We are also retrieving the whole document all at once, hence non-relational docu
 - Dockerized the whole system.
 - Celery worker containers can be horizontally scaled to handle load.
 - Also the Flask API service is horizontally scalable.
-- In case if database goes down and comes back after sometime, the tasks will keep on resume adding videos from the last execution date, so that no data is lost.
+- In case if database goes down and comes back after sometime, the tasks will resume adding videos from the last execution date, so that no data is lost.
 
 ### Bonus points
 
