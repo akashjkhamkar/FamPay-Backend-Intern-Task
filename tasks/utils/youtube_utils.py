@@ -19,7 +19,7 @@ def get_the_start_time():
     current_time = datetime.utcnow()
 
     if start_from_date == '':
-        start_from_date = current_time - timedelta(days=10)
+        start_from_date = current_time - timedelta(days=5)
     
     start_from_date_str = start_from_date.isoformat('T') + 'Z'
     return start_from_date_str, current_time
