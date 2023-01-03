@@ -39,15 +39,25 @@ def load_into_db(videos):
     if len(videos) == 0:
         return
     
-    # Parsing the date into a datetime object
+    # Parsing and keeping only the essential fields
+    entries = []
     for video in videos:
+        entry = {}
+        
         published_time = video['snippet']['publishTime']
-        video['publishTime'] = dateutil.parser.isoparse(published_time)
+        entry['publishTime'] = dateutil.parser.isoparse(published_time)
+        entry['videoId'] = video['id']['videoId']
+        entry['title'] = video['snippet']['title']
+        entry['description'] = video['snippet']['description']
+        entry['thumbnails'] = video['snippet']['thumbnails']
+        entry['channelTitle'] = video['snippet']['channelTitle']
 
+        entries.append(entry)
+    
     db = get_db()
 
     try:
-        db.youtube_videos.insert_many(videos, ordered=False)
+        db.youtube_videos.insert_many(entries, ordered=False)
     except errors.BulkWriteError as e:
         e.details['writeErrors']
         exceptions = []
